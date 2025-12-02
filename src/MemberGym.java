@@ -1,5 +1,3 @@
-package gym;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.*;
@@ -87,12 +85,12 @@ public class MemberGym extends JPanel {
                 Statement stmt = conn.createStatement();
                 ResultSet rs = stmt.executeQuery(sql);
                 while (rs.next()) {
-                    tableModel.addRow(new Object[]{
-                        rs.getInt("id_member"),
-                        rs.getString("nama"),
-                        rs.getInt("usia"),
-                        rs.getString("alamat"),
-                        rs.getString("no_telepon")
+                    tableModel.addRow(new Object[] {
+                            rs.getInt("id_member"),
+                            rs.getString("nama"),
+                            rs.getInt("usia"),
+                            rs.getString("alamat"),
+                            rs.getString("no_telepon")
                     });
                 }
                 rs.close();
@@ -100,8 +98,8 @@ public class MemberGym extends JPanel {
                 conn.close();
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(parentFrame,
-                    "Gagal mengambil data!\n" + ex.getMessage(),
-                    "Error", JOptionPane.ERROR_MESSAGE);
+                        "Gagal mengambil data!\n" + ex.getMessage(),
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
         };
 
@@ -119,24 +117,26 @@ public class MemberGym extends JPanel {
 
                 // Validasi input kosong
                 if (nama.isEmpty() || usiaStr.isEmpty() || alamat.isEmpty() || telepon.isEmpty()) {
-                    JOptionPane.showMessageDialog(parentFrame, "Semua field wajib diisi!", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(parentFrame, "Semua field wajib diisi!", "Error",
+                            JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 // Validasi usia harus angka positif
                 int usia;
                 try {
                     usia = Integer.parseInt(usiaStr);
-                    if (usia <= 0) throw new NumberFormatException();
+                    if (usia <= 0)
+                        throw new NumberFormatException();
                 } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(parentFrame, "Usia harus berupa angka & positif!", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(parentFrame, "Usia harus berupa angka & positif!", "Error",
+                            JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 try {
                     Connection conn = DriverManager.getConnection(
-                        "jdbc:mysql://localhost:3306/gym",
-                        "root",
-                        ""
-                    );
+                            "jdbc:mysql://localhost:3306/gym",
+                            "root",
+                            "");
                     String sql = "INSERT INTO member_gym (nama, usia, alamat, no_telepon) VALUES (?, ?, ?, ?)";
                     PreparedStatement stmt = conn.prepareStatement(sql);
                     stmt.setString(1, nama);
@@ -148,14 +148,14 @@ public class MemberGym extends JPanel {
                     conn.close();
 
                     JOptionPane.showMessageDialog(parentFrame,
-                        "Member gym berhasil didaftarkan!",
-                        "Sukses", JOptionPane.INFORMATION_MESSAGE);
+                            "Member gym berhasil didaftarkan!",
+                            "Sukses", JOptionPane.INFORMATION_MESSAGE);
 
                     loadMember.run();
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(parentFrame,
-                        "Gagal menyimpan ke database!\n" + ex.getMessage(),
-                        "Error", JOptionPane.ERROR_MESSAGE);
+                            "Gagal menyimpan ke database!\n" + ex.getMessage(),
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -177,11 +177,14 @@ public class MemberGym extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = tableMember.getSelectedRow();
                 if (selectedRow == -1) {
-                    JOptionPane.showMessageDialog(parentFrame, "Pilih satu baris data yang ingin dihapus!", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(parentFrame, "Pilih satu baris data yang ingin dihapus!", "Error",
+                            JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                int confirm = JOptionPane.showConfirmDialog(parentFrame, "Yakin ingin menghapus member ini?", "Hapus Member", JOptionPane.YES_NO_OPTION);
-                if (confirm != JOptionPane.YES_OPTION) return;
+                int confirm = JOptionPane.showConfirmDialog(parentFrame, "Yakin ingin menghapus member ini?",
+                        "Hapus Member", JOptionPane.YES_NO_OPTION);
+                if (confirm != JOptionPane.YES_OPTION)
+                    return;
 
                 int idMember = (int) tableModel.getValueAt(selectedRow, 0);
 
@@ -194,11 +197,13 @@ public class MemberGym extends JPanel {
                     stmt.close();
                     conn.close();
 
-                    JOptionPane.showMessageDialog(parentFrame, "Data berhasil dihapus!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(parentFrame, "Data berhasil dihapus!", "Sukses",
+                            JOptionPane.INFORMATION_MESSAGE);
 
                     loadMember.run();
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(parentFrame, "Gagal menghapus data!\n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(parentFrame, "Gagal menghapus data!\n" + ex.getMessage(), "Error",
+                            JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
