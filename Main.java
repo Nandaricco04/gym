@@ -14,7 +14,7 @@ public class Main extends JFrame {
 
         tabbedPane.addTab("Daftar Member Gym", new MemberGym(this));
         tabbedPane.addTab("Data Instruktur Gym", new Instruktur(this));
-        tabbedPane.addTab("Daftar Kelas Gym", new DaftarKelas(this));
+        tabbedPane.addTab("Daftar Kelas Gym", new JadwalKelas(this));
         tabbedPane.addTab("Pendaftaran Kelas Gym", new PendaftaranKelas(this));
 
         add(tabbedPane);
