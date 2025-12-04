@@ -148,9 +148,9 @@ public class JadwalKelas extends JPanel {
                     return;
                 }
                 // Ambil id instruktur dari ComboBox
-                int idInstruktur;
+                int id_Instruktur;
                 try {
-                    idInstruktur = Integer.parseInt(instrukturCombo.split("-")[0]);
+                    id_Instruktur = Integer.parseInt(instrukturCombo.split(" - ")[0]);
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(parentFrame, "Instruktur tidak valid!", "Error",
                             JOptionPane.ERROR_MESSAGE);
@@ -166,7 +166,7 @@ public class JadwalKelas extends JPanel {
                     stmt.setString(1, namaKelas);
                     stmt.setString(2, hari);
                     stmt.setString(3, jamKelas);
-                    stmt.setInt(4, idInstruktur);
+                    stmt.setInt(4, id_Instruktur);
                     stmt.executeUpdate();
                     stmt.close();
                     conn.close();
