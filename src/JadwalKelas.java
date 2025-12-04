@@ -22,7 +22,7 @@ public class JadwalKelas extends JPanel {
         lblHari.setBounds(20, 60, 120, 25);
         add(lblHari);
 
-        // Input Hari
+        // Combobox Hari
         String[] listhari = { "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu" };
         JComboBox<String> cmbHari = new JComboBox<>(listhari);
         cmbHari.setBounds(150, 60, 230, 25);
@@ -33,7 +33,7 @@ public class JadwalKelas extends JPanel {
         lblJam.setBounds(20, 100, 120, 25);
         add(lblJam);
 
-        // Input
+        // Input jam
         JTextField txtJam = new JTextField();
         txtJam.setBounds(150, 100, 230, 25);
         add(txtJam);
@@ -45,14 +45,14 @@ public class JadwalKelas extends JPanel {
 
         // ComboBox Instruktur
         JComboBox<String> cmbInstruktur = new JComboBox<>();
-        cmbInstruktur.setBounds(150, 60, 230, 25);
+        cmbInstruktur.setBounds(150, 140, 230, 25);
         add(cmbInstruktur);
 
         // Mengambil data Instruktur dari DB
         Runnable loadInstruktur = () -> {
             cmbInstruktur.removeAllItems();
             try {
-                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost3306/gym", "root", "");
+                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gym", "root", "");
                 String sql = "SELECT id_instruktur, nama FROM instruktur_gym";
                 Statement stmt = conn.createStatement();
                 ResultSet rs = stmt.executeQuery(sql);
@@ -85,8 +85,8 @@ public class JadwalKelas extends JPanel {
         add(btnHapus);
 
         // Tombol update
-        JButton btnUpdate = new JButton("Hapus");
-        btnUpdate.setBounds(290, 190, 100, 30);
+        JButton btnUpdate = new JButton("Update");
+        btnUpdate.setBounds(400, 190, 100, 30);
         add(btnUpdate);
 
         // Table Model dan JTable
@@ -103,12 +103,13 @@ public class JadwalKelas extends JPanel {
         tableModel.addColumn("Jam Kelas");
         tableModel.addColumn("Nama Instruktur");
 
+        // Fungsi untuk load data jadwal dari database
         Runnable loadKelas = () -> {
-            cmbInstruktur.removeAllItems();
             try {
-                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost3306/gym", "root", "");
-                String sql = "SELECT jc.id_kelas, jc.nama_kelas, jc.hari, jc.jam_kelas, ig.nama as instruktur "
-                        + "FROM jadwal_kelas jc JOIN instruktur_gym = ig.id_instruktur";
+                tableModel.setRowCount(0);
+                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gym", "root", "");
+                String sql = "SELECT jc.id_kelas, jc.nama_kelas, jc.hari, jc.jam_kelas, ig.nama as instruktur " +
+                        "FROM jadwal_kelas jc JOIN instruktur_gym ig ON jc.id_instruktur = ig.id_instruktur";
                 Statement stmt = conn.createStatement();
                 ResultSet rs = stmt.executeQuery(sql);
                 while (rs.next()) {
@@ -117,17 +118,18 @@ public class JadwalKelas extends JPanel {
                             rs.getString("nama_kelas"),
                             rs.getString("hari"),
                             rs.getString("jam_kelas"),
-                            rs.getString("instruktur"),
+                            rs.getString("instruktur")
                     });
                 }
                 rs.close();
                 stmt.close();
                 conn.close();
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(parentFrame, "Gagal mengambil instruktur!\n" + ex.getMessage(), "Error",
+                JOptionPane.showMessageDialog(parentFrame, "Gagal mengambil data jadwal!\n" + ex.getMessage(), "Error",
                         JOptionPane.ERROR_MESSAGE);
             }
         };
+        // Initial load
         loadKelas.run();
 
         // Event simpan ke MYSQL
@@ -227,6 +229,5 @@ public class JadwalKelas extends JPanel {
                 }
             }
         });
-
     }
 }

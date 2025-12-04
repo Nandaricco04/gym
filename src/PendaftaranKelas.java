@@ -7,6 +7,6 @@ public class PendaftaranKelas extends JPanel {
     public PendaftaranKelas(JFrame parentFrame) {
         setLayout(null);
 
-        // isi dek kene
+        // isi ndek kene
     }
 }
