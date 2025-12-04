@@ -83,7 +83,7 @@ public class PendaftaranKelas extends JPanel {
         Runnable loadComboMember = () -> {
             try {
                 cmbMember.removeAllItems();
-                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gym", "root", "");
+                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_gym", "root", "");
                 String sql = "SELECT id_member, nama FROM member_gym";
                 Statement stmt = conn.createStatement();
                 ResultSet rs = stmt.executeQuery(sql);
@@ -101,7 +101,7 @@ public class PendaftaranKelas extends JPanel {
         Runnable loadComboKelas = () -> {
             try {
                 cmbKelas.removeAllItems();
-                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gym", "root", "");
+                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_gym", "root", "");
                 // ambil nama kelas & nama instruktur lewat JOIN
                 String sql = "SELECT k.id_kelas, k.nama_kelas, i.nama as nama_instruktur " +
                              "FROM jadwal_kelas k " +
@@ -125,7 +125,7 @@ public class PendaftaranKelas extends JPanel {
         Runnable loadPendaftaranKelas = () -> {
             try {
                 tableModel.setRowCount(0);
-                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gym", "root", "");
+                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_gym", "root", "");
                 String sql = "SELECT pk.id_pendaftaran, m.nama as member_nama, k.nama_kelas, " +
                              "i.nama as instruktur_nama, pk.tanggal_daftar, pk.catatan " +
                              "FROM pendaftaran_kelas pk " +
@@ -195,7 +195,7 @@ public class PendaftaranKelas extends JPanel {
             int id_kelas = Integer.parseInt(kelas.split(" - ")[0]);
 
             try {
-                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gym", "root", "");
+                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_gym", "root", "");
                 String sql = "INSERT INTO pendaftaran_kelas (id_member, id_kelas, tanggal_daftar, catatan) VALUES (?, ?, ?, ?)";
                 PreparedStatement stmt = conn.prepareStatement(sql);
                 stmt.setInt(1, id_member);
@@ -226,7 +226,7 @@ public class PendaftaranKelas extends JPanel {
                 JOptionPane.showMessageDialog(parentFrame, "Pilih data yang mau diupdate!");
                 return;
             }
-            
+
             int id = (int) tableModel.getValueAt(row, 0);
 
             String member = (String) cmbMember.getSelectedItem();
@@ -238,7 +238,7 @@ public class PendaftaranKelas extends JPanel {
             int id_kelas = Integer.parseInt(kelas.split(" - ")[0]);
 
             try {
-                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gym", "root", "");
+                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_gym", "root", "");
                 String sql = "UPDATE pendaftaran_kelas SET id_member=?, id_kelas=?, tanggal_daftar=?, catatan=? WHERE id_pendaftaran=?";
                 PreparedStatement stmt = conn.prepareStatement(sql);
                 stmt.setInt(1, id_member);
@@ -270,7 +270,7 @@ public class PendaftaranKelas extends JPanel {
             int idPendaftaran = (int) tableModel.getValueAt(selectedRow, 0);
 
             try {
-                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gym", "root", "");
+                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_gym", "root", "");
                 String sql = "DELETE FROM pendaftaran_kelas WHERE id_pendaftaran=?";
                 PreparedStatement stmt = conn.prepareStatement(sql);
                 stmt.setInt(1, idPendaftaran);

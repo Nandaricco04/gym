@@ -80,7 +80,7 @@ public class MemberGym extends JPanel {
         Runnable loadMember = () -> {
             try {
                 tableModel.setRowCount(0);
-                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gym", "root", "");
+                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_gym", "root", "");
                 String sql = "SELECT * FROM member_gym";
                 Statement stmt = conn.createStatement();
                 ResultSet rs = stmt.executeQuery(sql);
@@ -134,7 +134,7 @@ public class MemberGym extends JPanel {
                 }
                 try {
                     Connection conn = DriverManager.getConnection(
-                            "jdbc:mysql://localhost:3306/gym",
+                            "jdbc:mysql://localhost:3306/db_gym",
                             "root",
                             "");
                     String sql = "INSERT INTO member_gym (nama, usia, alamat, no_telepon) VALUES (?, ?, ?, ?)";
@@ -189,7 +189,7 @@ public class MemberGym extends JPanel {
                 int idMember = (int) tableModel.getValueAt(selectedRow, 0);
 
                 try {
-                    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gym", "root", "");
+                    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_gym", "root", "");
                     String sql = "DELETE FROM member_gym WHERE id_member=?";
                     PreparedStatement stmt = conn.prepareStatement(sql);
                     stmt.setInt(1, idMember);

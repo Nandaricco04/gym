@@ -85,7 +85,7 @@ public class Instruktur extends JPanel {
         Runnable loadInstruktur = () -> {
             try {
                 tableModel.setRowCount(0);
-                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gym", "root", "");
+                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_gym", "root", "");
                 String sql = "SELECT * FROM instruktur_gym";
                 Statement stmt = conn.createStatement();
                 ResultSet rs = stmt.executeQuery(sql);
@@ -153,7 +153,7 @@ public class Instruktur extends JPanel {
                 }
                 try {
                     Connection conn = DriverManager.getConnection(
-                            "jdbc:mysql://localhost:3306/gym",
+                            "jdbc:mysql://localhost:3306/db_gym",
                             "root",
                             "");
                     String sql = "INSERT INTO instruktur_gym (nama, usia, keahlian, no_telepon) VALUES (?, ?, ?, ?)";

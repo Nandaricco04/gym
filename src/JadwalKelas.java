@@ -52,7 +52,7 @@ public class JadwalKelas extends JPanel {
         Runnable loadInstruktur = () -> {
             cmbInstruktur.removeAllItems();
             try {
-                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gym", "root", "");
+                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_gym", "root", "");
                 String sql = "SELECT id_instruktur, nama FROM instruktur_gym";
                 Statement stmt = conn.createStatement();
                 ResultSet rs = stmt.executeQuery(sql);
@@ -107,7 +107,7 @@ public class JadwalKelas extends JPanel {
         Runnable loadKelas = () -> {
             try {
                 tableModel.setRowCount(0);
-                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gym", "root", "");
+                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_gym", "root", "");
                 String sql = "SELECT jc.id_kelas, jc.nama_kelas, jc.hari, jc.jam_kelas, ig.nama as instruktur " +
                         "FROM jadwal_kelas jc JOIN instruktur_gym ig ON jc.id_instruktur = ig.id_instruktur";
                 Statement stmt = conn.createStatement();
@@ -158,7 +158,7 @@ public class JadwalKelas extends JPanel {
                 }
                 try {
                     Connection conn = DriverManager.getConnection(
-                            "jdbc:mysql://localhost:3306/gym",
+                            "jdbc:mysql://localhost:3306/db_gym",
                             "root",
                             "");
                     String sql = "INSERT INTO jadwal_kelas (nama_kelas, hari, jam_kelas, id_instruktur) VALUES (?, ?, ?, ?)";
@@ -211,7 +211,7 @@ public class JadwalKelas extends JPanel {
                 int idKelas = (int) tableModel.getValueAt(selectedRow, 0);
 
                 try {
-                    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gym", "root", "");
+                    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_gym", "root", "");
                     String sql = "DELETE FROM jadwal_kelas WHERE id_kelas=?";
                     PreparedStatement stmt = conn.prepareStatement(sql);
                     stmt.setInt(1, idKelas);
