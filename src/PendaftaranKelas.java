@@ -226,6 +226,7 @@ public class PendaftaranKelas extends JPanel {
                 JOptionPane.showMessageDialog(parentFrame, "Pilih data yang mau diupdate!");
                 return;
             }
+            
             int id = (int) tableModel.getValueAt(row, 0);
 
             String member = (String) cmbMember.getSelectedItem();
