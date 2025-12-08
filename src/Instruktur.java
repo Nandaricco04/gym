@@ -201,7 +201,7 @@ public class Instruktur extends JPanel {
             int id = (int) tableModel.getValueAt(row, 0);
 
             try {
-                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gym", "root", "");
+                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_gym", "root", "");
                 String sql = "UPDATE instruktur_gym SET nama=?, usia=?, keahlian=?, no_telepon=? WHERE id_instruktur=?";
                 PreparedStatement stmt = conn.prepareStatement(sql);
 
@@ -241,7 +241,7 @@ public class Instruktur extends JPanel {
                 int idMember = (int) tableModel.getValueAt(selectedRow, 0);
 
                 try {
-                    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gym", "root", "");
+                    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_gym", "root", "");
                     String sql = "DELETE FROM instruktur_gym WHERE id_instruktur=?";
                     PreparedStatement stmt = conn.prepareStatement(sql);
                     stmt.setInt(1, idMember);

@@ -22,10 +22,15 @@ public class JadwalKelas extends JPanel {
         lblHari.setBounds(20, 60, 120, 25);
         add(lblHari);
 
-        // Combobox Hari
-        String[] listhari = { "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu" };
+        // Combobox Hari dengan default
+        String[] listhari = {
+                "– Pilih Hari –",
+                "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"
+        };
+
         JComboBox<String> cmbHari = new JComboBox<>(listhari);
         cmbHari.setBounds(150, 60, 230, 25);
+        cmbHari.setSelectedIndex(0);
         add(cmbHari);
 
         // Label Jam Kelas
@@ -48,70 +53,86 @@ public class JadwalKelas extends JPanel {
         cmbInstruktur.setBounds(150, 140, 230, 25);
         add(cmbInstruktur);
 
-        // Mengambil data Instruktur dari DB
+        // Load Instruktur Dropdown
         Runnable loadInstruktur = () -> {
             cmbInstruktur.removeAllItems();
+
+            cmbInstruktur.addItem("– Pilih Instruktur –");
+
             try {
                 Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_gym", "root", "");
                 String sql = "SELECT id_instruktur, nama FROM instruktur_gym";
                 Statement stmt = conn.createStatement();
                 ResultSet rs = stmt.executeQuery(sql);
+
                 while (rs.next()) {
                     cmbInstruktur.addItem(rs.getInt("id_instruktur") + " - " + rs.getString("nama"));
                 }
+
                 rs.close();
                 stmt.close();
                 conn.close();
+
+                cmbInstruktur.setSelectedIndex(0);
+
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(parentFrame, "Gagal mengambil instruktur!\n" + ex.getMessage(), "Error",
-                        JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(parentFrame, "Gagal mengambil instruktur!\n" + ex.getMessage(),
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
         };
         loadInstruktur.run();
 
-        // Tombol Simpan
+        loadInstruktur.run(); // load pertama
+
+        // REFRESH saat panel dibuka lagi
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentShown(ComponentEvent e) {
+                loadInstruktur.run();
+            }
+        });
+
+        // BUTTONS
         JButton btnSimpan = new JButton("Tambah Kelas");
         btnSimpan.setBounds(20, 190, 150, 30);
         add(btnSimpan);
 
-        // Tombol Reset
         JButton btnReset = new JButton("Reset");
         btnReset.setBounds(180, 190, 100, 30);
         add(btnReset);
 
-        // Tombol Hapus
         JButton btnHapus = new JButton("Hapus");
         btnHapus.setBounds(290, 190, 100, 30);
         add(btnHapus);
 
-        // Tombol update
         JButton btnUpdate = new JButton("Update");
         btnUpdate.setBounds(400, 190, 100, 30);
         add(btnUpdate);
 
-        // Table Model dan JTable
+        // TABLE
         DefaultTableModel tableModel = new DefaultTableModel();
         JTable tableKelas = new JTable(tableModel);
         JScrollPane scrollTable = new JScrollPane(tableKelas);
         scrollTable.setBounds(20, 240, 600, 170);
         add(scrollTable);
 
-        // Set kolom tabel
         tableModel.addColumn("ID Kelas");
         tableModel.addColumn("Nama Kelas");
         tableModel.addColumn("Hari");
         tableModel.addColumn("Jam Kelas");
         tableModel.addColumn("Nama Instruktur");
 
-        // Fungsi untuk load data jadwal dari database
+        // Load data kelas
         Runnable loadKelas = () -> {
             try {
                 tableModel.setRowCount(0);
                 Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_gym", "root", "");
-                String sql = "SELECT jc.id_kelas, jc.nama_kelas, jc.hari, jc.jam_kelas, ig.nama as instruktur " +
+                String sql = "SELECT jc.id_kelas, jc.nama_kelas, jc.hari, jc.jam_kelas, ig.nama AS instruktur " +
                         "FROM jadwal_kelas jc JOIN instruktur_gym ig ON jc.id_instruktur = ig.id_instruktur";
+
                 Statement stmt = conn.createStatement();
                 ResultSet rs = stmt.executeQuery(sql);
+
                 while (rs.next()) {
                     tableModel.addRow(new Object[] {
                             rs.getInt("id_kelas"),
@@ -121,112 +142,165 @@ public class JadwalKelas extends JPanel {
                             rs.getString("instruktur")
                     });
                 }
+
                 rs.close();
                 stmt.close();
                 conn.close();
+
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(parentFrame, "Gagal mengambil data jadwal!\n" + ex.getMessage(), "Error",
-                        JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(parentFrame, "Gagal mengambil data jadwal!\n" + ex.getMessage(),
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
         };
-        // Initial load
         loadKelas.run();
 
-        // Event simpan ke MYSQL
-        btnSimpan.addActionListener(new ActionListener() {
+        // TABLE CLICK → isi form
+        tableKelas.addMouseListener(new MouseAdapter() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                String namaKelas = txtKelas.getText().trim();
-                String hari = (String) cmbHari.getSelectedItem();
-                String jamKelas = txtJam.getText();
-                String instrukturCombo = (String) cmbInstruktur.getSelectedItem();
+            public void mouseClicked(MouseEvent e) {
+                int row = tableKelas.getSelectedRow();
+                if (row != -1) {
 
-                // Validasi input kosong
-                if (namaKelas.isEmpty() || jamKelas.isEmpty() || instrukturCombo == null) {
-                    JOptionPane.showMessageDialog(parentFrame, "Semua field wajib diisi!", "Error",
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                // Ambil id instruktur dari ComboBox
-                int id_Instruktur;
-                try {
-                    id_Instruktur = Integer.parseInt(instrukturCombo.split(" - ")[0]);
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(parentFrame, "Instruktur tidak valid!", "Error",
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                try {
-                    Connection conn = DriverManager.getConnection(
-                            "jdbc:mysql://localhost:3306/db_gym",
-                            "root",
-                            "");
-                    String sql = "INSERT INTO jadwal_kelas (nama_kelas, hari, jam_kelas, id_instruktur) VALUES (?, ?, ?, ?)";
-                    PreparedStatement stmt = conn.prepareStatement(sql);
-                    stmt.setString(1, namaKelas);
-                    stmt.setString(2, hari);
-                    stmt.setString(3, jamKelas);
-                    stmt.setInt(4, id_Instruktur);
-                    stmt.executeUpdate();
-                    stmt.close();
-                    conn.close();
+                    txtKelas.setText(tableModel.getValueAt(row, 1).toString());
+                    cmbHari.setSelectedItem(tableModel.getValueAt(row, 2).toString());
+                    txtJam.setText(tableModel.getValueAt(row, 3).toString());
 
-                    JOptionPane.showMessageDialog(parentFrame, "Jadwal kelas gym berhasil ditambahkan!", "Sukses",
-                            JOptionPane.INFORMATION_MESSAGE);
+                    String namaInstruktur = tableModel.getValueAt(row, 4).toString();
 
-                    loadKelas.run();
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(parentFrame, "Gagal menyimpan ke database!\n" + ex.getMessage(),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                    for (int i = 0; i < cmbInstruktur.getItemCount(); i++) {
+                        if (cmbInstruktur.getItemAt(i).contains(namaInstruktur)) {
+                            cmbInstruktur.setSelectedIndex(i);
+                            break;
+                        }
+                    }
                 }
             }
         });
 
-        // Event Reset Form
-        btnReset.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                txtKelas.setText("");
-                cmbHari.setSelectedIndex(0);
-                txtJam.setText("");
-                cmbInstruktur.setSelectedIndex(0);
+        // SIMPAN
+        btnSimpan.addActionListener(e -> {
+            String namaKelas = txtKelas.getText().trim();
+            String hari = (String) cmbHari.getSelectedItem();
+            String jamKelas = txtJam.getText();
+            int selectedInstruktur = cmbInstruktur.getSelectedIndex();
+
+            if (namaKelas.isEmpty() || jamKelas.isEmpty() || cmbHari.getSelectedIndex() == 0
+                    || selectedInstruktur == 0) {
+                JOptionPane.showMessageDialog(parentFrame, "Semua field wajib diisi!", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            String instrukturCombo = cmbInstruktur.getSelectedItem().toString();
+            int idInstruktur = Integer.parseInt(instrukturCombo.split("-")[0].trim());
+
+            try {
+                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_gym", "root", "");
+                String sql = "INSERT INTO jadwal_kelas (nama_kelas, hari, jam_kelas, id_instruktur) VALUES (?, ?, ?, ?)";
+                PreparedStatement stmt = conn.prepareStatement(sql);
+
+                stmt.setString(1, namaKelas);
+                stmt.setString(2, hari);
+                stmt.setString(3, jamKelas);
+                stmt.setInt(4, idInstruktur);
+                stmt.executeUpdate();
+
+                stmt.close();
+                conn.close();
+
+                JOptionPane.showMessageDialog(parentFrame, "Jadwal kelas berhasil ditambahkan!");
+                loadKelas.run();
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(parentFrame, "Gagal menyimpan!\n" + ex.getMessage());
             }
         });
 
-        // EVENT HAPUS DATA
-        btnHapus.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int selectedRow = tableKelas.getSelectedRow();
-                if (selectedRow == -1) {
-                    JOptionPane.showMessageDialog(parentFrame, "Pilih satu baris jadwal yang ingin dihapus!", "Error",
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                int confirm = JOptionPane.showConfirmDialog(parentFrame, "Yakin ingin menghapus jadwal ini?",
-                        "Hapus Jadwal", JOptionPane.YES_NO_OPTION);
-                if (confirm != JOptionPane.YES_OPTION)
-                    return;
+        // UPDATE
+        btnUpdate.addActionListener(e -> {
+            int selectedRow = tableKelas.getSelectedRow();
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(parentFrame, "Pilih data terlebih dahulu!");
+                return;
+            }
 
-                int idKelas = (int) tableModel.getValueAt(selectedRow, 0);
+            int idKelas = (int) tableModel.getValueAt(selectedRow, 0);
+            String namaKelas = txtKelas.getText();
+            String hari = (String) cmbHari.getSelectedItem();
+            String jamKelas = txtJam.getText();
 
-                try {
-                    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_gym", "root", "");
-                    String sql = "DELETE FROM jadwal_kelas WHERE id_kelas=?";
-                    PreparedStatement stmt = conn.prepareStatement(sql);
-                    stmt.setInt(1, idKelas);
-                    stmt.executeUpdate();
-                    stmt.close();
-                    conn.close();
+            if (cmbInstruktur.getSelectedIndex() == 0 || cmbHari.getSelectedIndex() == 0) {
+                JOptionPane.showMessageDialog(parentFrame, "Pilih hari dan instruktur!",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
-                    JOptionPane.showMessageDialog(parentFrame, "Jadwal berhasil dihapus!", "Sukses",
-                            JOptionPane.INFORMATION_MESSAGE);
+            String instrukturCombo = cmbInstruktur.getSelectedItem().toString();
+            int idInstruktur = Integer.parseInt(instrukturCombo.split("-")[0].trim());
 
-                    loadKelas.run();
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(parentFrame, "Gagal menghapus data!\n" + ex.getMessage(), "Error",
-                            JOptionPane.ERROR_MESSAGE);
-                }
+            try {
+                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_gym", "root", "");
+                String sql = "UPDATE jadwal_kelas SET nama_kelas=?, hari=?, jam_kelas=?, id_instruktur=? WHERE id_kelas=?";
+                PreparedStatement stmt = conn.prepareStatement(sql);
+
+                stmt.setString(1, namaKelas);
+                stmt.setString(2, hari);
+                stmt.setString(3, jamKelas);
+                stmt.setInt(4, idInstruktur);
+                stmt.setInt(5, idKelas);
+                stmt.executeUpdate();
+
+                stmt.close();
+                conn.close();
+
+                JOptionPane.showMessageDialog(parentFrame, "Jadwal berhasil diupdate!");
+                loadKelas.run();
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(parentFrame, "Gagal update!\n" + ex.getMessage());
+            }
+        });
+
+        // RESET
+        btnReset.addActionListener(e -> {
+            txtKelas.setText("");
+            cmbHari.setSelectedIndex(0);
+            txtJam.setText("");
+            cmbInstruktur.setSelectedIndex(0);
+        });
+
+        // HAPUS
+        btnHapus.addActionListener(e -> {
+            int selectedRow = tableKelas.getSelectedRow();
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(parentFrame, "Pilih baris yang ingin dihapus!");
+                return;
+            }
+
+            int idKelas = (int) tableModel.getValueAt(selectedRow, 0);
+
+            int confirm = JOptionPane.showConfirmDialog(parentFrame,
+                    "Yakin ingin menghapus jadwal ini?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
+
+            if (confirm != JOptionPane.YES_OPTION)
+                return;
+
+            try {
+                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_gym", "root", "");
+                String sql = "DELETE FROM jadwal_kelas WHERE id_kelas=?";
+                PreparedStatement stmt = conn.prepareStatement(sql);
+
+                stmt.setInt(1, idKelas);
+                stmt.executeUpdate();
+
+                stmt.close();
+                conn.close();
+
+                JOptionPane.showMessageDialog(parentFrame, "Jadwal berhasil dihapus!");
+                loadKelas.run();
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(parentFrame, "Gagal menghapus!\n" + ex.getMessage());
             }
         });
     }
