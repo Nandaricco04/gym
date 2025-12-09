@@ -210,6 +210,7 @@ public class JadwalKelas extends JPanel {
 
                 JOptionPane.showMessageDialog(parentFrame, "Jadwal kelas berhasil ditambahkan!");
                 loadKelas.run();
+                PendaftaranKelas.refreshAllKelas();
 
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(parentFrame, "Gagal menyimpan!\n" + ex.getMessage());
