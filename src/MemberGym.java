@@ -152,7 +152,6 @@ public class MemberGym extends JPanel {
                             "Sukses", JOptionPane.INFORMATION_MESSAGE);
 
                     loadMember.run();
-                    PendaftaranKelas.refreshAllMembers();
                     
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(parentFrame,

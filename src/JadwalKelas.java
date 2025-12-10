@@ -82,8 +82,6 @@ public class JadwalKelas extends JPanel {
         };
         loadInstruktur.run();
 
-        loadInstruktur.run(); // load pertama
-
         // REFRESH saat panel dibuka lagi
         addComponentListener(new ComponentAdapter() {
             @Override
@@ -178,130 +176,140 @@ public class JadwalKelas extends JPanel {
         });
 
         // SIMPAN
-        btnSimpan.addActionListener(e -> {
-            String namaKelas = txtKelas.getText().trim();
-            String hari = (String) cmbHari.getSelectedItem();
-            String jamKelas = txtJam.getText();
-            int selectedInstruktur = cmbInstruktur.getSelectedIndex();
+        btnSimpan.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String namaKelas = txtKelas.getText().trim();
+                String hari = (String) cmbHari.getSelectedItem();
+                String jamKelas = txtJam.getText();
+                int selectedInstruktur = cmbInstruktur.getSelectedIndex();
 
-            if (namaKelas.isEmpty() || jamKelas.isEmpty() || cmbHari.getSelectedIndex() == 0
-                    || selectedInstruktur == 0) {
-                JOptionPane.showMessageDialog(parentFrame, "Semua field wajib diisi!", "Error",
-                        JOptionPane.ERROR_MESSAGE);
-                return;
-            }
+                if (namaKelas.isEmpty() || jamKelas.isEmpty() || cmbHari.getSelectedIndex() == 0
+                        || selectedInstruktur == 0) {
+                    JOptionPane.showMessageDialog(parentFrame, "Semua field wajib diisi!", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
 
-            String instrukturCombo = cmbInstruktur.getSelectedItem().toString();
-            int idInstruktur = Integer.parseInt(instrukturCombo.split("-")[0].trim());
+                String instrukturCombo = cmbInstruktur.getSelectedItem().toString();
+                int idInstruktur = Integer.parseInt(instrukturCombo.split("-")[0].trim());
 
-            try {
-                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_gym", "root", "");
-                String sql = "INSERT INTO jadwal_kelas (nama_kelas, hari, jam_kelas, id_instruktur) VALUES (?, ?, ?, ?)";
-                PreparedStatement stmt = conn.prepareStatement(sql);
+                try {
+                    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_gym", "root", "");
+                    String sql = "INSERT INTO jadwal_kelas (nama_kelas, hari, jam_kelas, id_instruktur) VALUES (?, ?, ?, ?)";
+                    PreparedStatement stmt = conn.prepareStatement(sql);
 
-                stmt.setString(1, namaKelas);
-                stmt.setString(2, hari);
-                stmt.setString(3, jamKelas);
-                stmt.setInt(4, idInstruktur);
-                stmt.executeUpdate();
+                    stmt.setString(1, namaKelas);
+                    stmt.setString(2, hari);
+                    stmt.setString(3, jamKelas);
+                    stmt.setInt(4, idInstruktur);
+                    stmt.executeUpdate();
 
-                stmt.close();
-                conn.close();
+                    stmt.close();
+                    conn.close();
 
-                JOptionPane.showMessageDialog(parentFrame, "Jadwal kelas berhasil ditambahkan!");
-                loadKelas.run();
-                PendaftaranKelas.refreshAllKelas();
+                    JOptionPane.showMessageDialog(parentFrame, "Jadwal kelas berhasil ditambahkan!");
+                    loadKelas.run();
 
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(parentFrame, "Gagal menyimpan!\n" + ex.getMessage());
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(parentFrame, "Gagal menyimpan!\n" + ex.getMessage());
+                }
             }
         });
 
         // UPDATE
-        btnUpdate.addActionListener(e -> {
-            int selectedRow = tableKelas.getSelectedRow();
-            if (selectedRow == -1) {
-                JOptionPane.showMessageDialog(parentFrame, "Pilih data terlebih dahulu!");
-                return;
-            }
+        btnUpdate.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = tableKelas.getSelectedRow();
+                if (selectedRow == -1) {
+                    JOptionPane.showMessageDialog(parentFrame, "Pilih data terlebih dahulu!");
+                    return;
+                }
 
-            int idKelas = (int) tableModel.getValueAt(selectedRow, 0);
-            String namaKelas = txtKelas.getText();
-            String hari = (String) cmbHari.getSelectedItem();
-            String jamKelas = txtJam.getText();
+                int idKelas = (int) tableModel.getValueAt(selectedRow, 0);
+                String namaKelas = txtKelas.getText();
+                String hari = (String) cmbHari.getSelectedItem();
+                String jamKelas = txtJam.getText();
 
-            if (cmbInstruktur.getSelectedIndex() == 0 || cmbHari.getSelectedIndex() == 0) {
-                JOptionPane.showMessageDialog(parentFrame, "Pilih hari dan instruktur!",
-                        "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
+                if (cmbInstruktur.getSelectedIndex() == 0 || cmbHari.getSelectedIndex() == 0) {
+                    JOptionPane.showMessageDialog(parentFrame, "Pilih hari dan instruktur!",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
 
-            String instrukturCombo = cmbInstruktur.getSelectedItem().toString();
-            int idInstruktur = Integer.parseInt(instrukturCombo.split("-")[0].trim());
+                String instrukturCombo = cmbInstruktur.getSelectedItem().toString();
+                int idInstruktur = Integer.parseInt(instrukturCombo.split("-")[0].trim());
 
-            try {
-                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_gym", "root", "");
-                String sql = "UPDATE jadwal_kelas SET nama_kelas=?, hari=?, jam_kelas=?, id_instruktur=? WHERE id_kelas=?";
-                PreparedStatement stmt = conn.prepareStatement(sql);
+                try {
+                    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_gym", "root", "");
+                    String sql = "UPDATE jadwal_kelas SET nama_kelas=?, hari=?, jam_kelas=?, id_instruktur=? WHERE id_kelas=?";
+                    PreparedStatement stmt = conn.prepareStatement(sql);
 
-                stmt.setString(1, namaKelas);
-                stmt.setString(2, hari);
-                stmt.setString(3, jamKelas);
-                stmt.setInt(4, idInstruktur);
-                stmt.setInt(5, idKelas);
-                stmt.executeUpdate();
+                    stmt.setString(1, namaKelas);
+                    stmt.setString(2, hari);
+                    stmt.setString(3, jamKelas);
+                    stmt.setInt(4, idInstruktur);
+                    stmt.setInt(5, idKelas);
+                    stmt.executeUpdate();
+                    stmt.close();
+                    conn.close();
 
-                stmt.close();
-                conn.close();
+                    JOptionPane.showMessageDialog(parentFrame, "Jadwal berhasil diupdate!");
+                    loadKelas.run();
 
-                JOptionPane.showMessageDialog(parentFrame, "Jadwal berhasil diupdate!");
-                loadKelas.run();
-
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(parentFrame, "Gagal update!\n" + ex.getMessage());
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(parentFrame, "Gagal update!\n" + ex.getMessage());
+                }
             }
         });
 
         // RESET
-        btnReset.addActionListener(e -> {
-            txtKelas.setText("");
-            cmbHari.setSelectedIndex(0);
-            txtJam.setText("");
-            cmbInstruktur.setSelectedIndex(0);
+        btnReset.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                txtKelas.setText("");
+                cmbHari.setSelectedIndex(0);
+                txtJam.setText("");
+                cmbInstruktur.setSelectedIndex(0);
+            }
         });
 
         // HAPUS
-        btnHapus.addActionListener(e -> {
-            int selectedRow = tableKelas.getSelectedRow();
-            if (selectedRow == -1) {
-                JOptionPane.showMessageDialog(parentFrame, "Pilih baris yang ingin dihapus!");
-                return;
-            }
+        btnHapus.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = tableKelas.getSelectedRow();
+                if (selectedRow == -1) {
+                    JOptionPane.showMessageDialog(parentFrame, "Pilih baris yang ingin dihapus!");
+                    return;
+                }
 
-            int idKelas = (int) tableModel.getValueAt(selectedRow, 0);
+                int idKelas = (int) tableModel.getValueAt(selectedRow, 0);
 
-            int confirm = JOptionPane.showConfirmDialog(parentFrame,
-                    "Yakin ingin menghapus jadwal ini?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
+                int confirm = JOptionPane.showConfirmDialog(parentFrame,
+                        "Yakin ingin menghapus jadwal ini?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
 
-            if (confirm != JOptionPane.YES_OPTION)
-                return;
+                if (confirm != JOptionPane.YES_OPTION)
+                    return;
 
-            try {
-                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_gym", "root", "");
-                String sql = "DELETE FROM jadwal_kelas WHERE id_kelas=?";
-                PreparedStatement stmt = conn.prepareStatement(sql);
+                try {
+                    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_gym", "root", "");
+                    String sql = "DELETE FROM jadwal_kelas WHERE id_kelas=?";
+                    PreparedStatement stmt = conn.prepareStatement(sql);
 
-                stmt.setInt(1, idKelas);
-                stmt.executeUpdate();
+                    stmt.setInt(1, idKelas);
+                    stmt.executeUpdate();
 
-                stmt.close();
-                conn.close();
+                    stmt.close();
+                    conn.close();
 
-                JOptionPane.showMessageDialog(parentFrame, "Jadwal berhasil dihapus!");
-                loadKelas.run();
+                    JOptionPane.showMessageDialog(parentFrame, "Jadwal berhasil dihapus!");
+                    loadKelas.run();
 
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(parentFrame, "Gagal menghapus!\n" + ex.getMessage());
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(parentFrame, "Gagal menghapus!\n" + ex.getMessage());
+                }
             }
         });
     }
