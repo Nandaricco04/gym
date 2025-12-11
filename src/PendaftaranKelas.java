@@ -2,11 +2,13 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.*;
 import java.sql.*;
+import java.awt.Color;
 
 public class PendaftaranKelas extends JPanel {
 
     public PendaftaranKelas(JFrame parentFrame) {
         setLayout(null);
+        this.setBackground(new Color(250, 250, 250));
 
         // LABEL & INPUT
         JLabel lblMember = new JLabel("Member Gym:");
@@ -15,6 +17,7 @@ public class PendaftaranKelas extends JPanel {
 
         JComboBox<String> cmbMember = new JComboBox<>();
         cmbMember.setBounds(150, 20, 230, 25);
+        cmbMember.setBackground(new Color(250, 250, 250));
         add(cmbMember);
 
         JLabel lblKelas = new JLabel("Kelas:");
@@ -23,6 +26,7 @@ public class PendaftaranKelas extends JPanel {
 
         JComboBox<String> cmbKelas = new JComboBox<>();
         cmbKelas.setBounds(150, 60, 230, 25);
+        cmbKelas.setBackground(new Color(250, 250, 250));
         add(cmbKelas);
 
         JLabel lblTanggal = new JLabel("Tanggal Daftar:");
@@ -45,18 +49,26 @@ public class PendaftaranKelas extends JPanel {
         // BUTTONS ======
         JButton btnSimpan = new JButton("Daftarkan Kelas");
         btnSimpan.setBounds(20, 190, 150, 30);
+        btnSimpan.setBackground(new Color(76, 175, 80));
+        btnSimpan.setForeground(Color.WHITE); 
         add(btnSimpan);
 
         JButton btnReset = new JButton("Reset");
         btnReset.setBounds(180, 190, 100, 30);
+        btnReset.setBackground(new Color(255, 193, 7));
+        btnReset.setForeground(Color.WHITE); 
         add(btnReset);
 
         JButton btnUpdate = new JButton("Update");
         btnUpdate.setBounds(290, 190, 100, 30);
+        btnUpdate.setBackground(new Color(102, 178, 255));
+        btnUpdate.setForeground(Color.WHITE); 
         add(btnUpdate);
 
         JButton btnHapus = new JButton("Hapus");
         btnHapus.setBounds(400, 190, 100, 30);
+        btnHapus.setBackground(new Color(244, 67, 54));
+        btnHapus.setForeground(Color.WHITE);
         add(btnHapus);
 
         // TABLE

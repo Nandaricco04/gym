@@ -2,10 +2,12 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.*;
 import java.sql.*;
+import java.awt.Color;
 
 public class MemberGym extends JPanel {
     public MemberGym(JFrame parentFrame) {
         setLayout(null);
+        this.setBackground(new Color(250, 250, 250));
 
         // Label Nama
         JLabel lblNama = new JLabel("Nama Member:");
@@ -50,16 +52,22 @@ public class MemberGym extends JPanel {
         // Tombol Simpan
         JButton btnSimpan = new JButton("Daftar Member");
         btnSimpan.setBounds(20, 190, 150, 30);
+        btnSimpan.setBackground(new Color(76, 175, 80));
+        btnSimpan.setForeground(Color.WHITE); 
         add(btnSimpan);
 
         // Tombol Reset
         JButton btnReset = new JButton("Reset");
         btnReset.setBounds(180, 190, 100, 30);
+        btnReset.setBackground(new Color(255, 193, 7));
+        btnReset.setForeground(Color.WHITE); 
         add(btnReset);
 
         // Tombol Hapus
         JButton btnHapus = new JButton("Hapus");
         btnHapus.setBounds(290, 190, 100, 30);
+        btnHapus.setBackground(new Color(244, 67, 54));
+        btnHapus.setForeground(Color.WHITE);
         add(btnHapus);
 
         // Table Model dan JTable
