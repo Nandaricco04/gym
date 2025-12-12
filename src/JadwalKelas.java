@@ -9,22 +9,18 @@ public class JadwalKelas extends JPanel {
         setLayout(null);
         this.setBackground(new Color(250, 250, 250));
 
-        // Label Nama Kelas
         JLabel lblKelas = new JLabel("Nama Kelas:");
         lblKelas.setBounds(20, 20, 120, 25);
         add(lblKelas);
 
-        // Input Nama Kelas
         JTextField txtKelas = new JTextField();
         txtKelas.setBounds(150, 20, 230, 25);
         add(txtKelas);
 
-        // Label Hari
         JLabel lblHari = new JLabel("Hari:");
         lblHari.setBounds(20, 60, 120, 25);
         add(lblHari);
 
-        // Combobox Hari dengan default
         String[] listhari = {
                 "– Pilih Hari –",
                 "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"
@@ -36,28 +32,23 @@ public class JadwalKelas extends JPanel {
         cmbHari.setBackground(new Color(250, 250, 250));
         add(cmbHari);
 
-        // Label Jam Kelas
         JLabel lblJam = new JLabel("Jam Kelas:");
         lblJam.setBounds(20, 100, 120, 25);
         add(lblJam);
 
-        // Input jam
         JTextField txtJam = new JTextField();
         txtJam.setBounds(150, 100, 230, 25);
         add(txtJam);
 
-        // Label Instruktur
         JLabel lblInstruktur = new JLabel("Nama Instruktur:");
         lblInstruktur.setBounds(20, 140, 120, 25);
         add(lblInstruktur);
 
-        // ComboBox Instruktur
         JComboBox<String> cmbInstruktur = new JComboBox<>();
         cmbInstruktur.setBounds(150, 140, 230, 25);
         cmbInstruktur.setBackground(new Color(250, 250, 250));
         add(cmbInstruktur);
 
-        // Load Instruktur Dropdown
         Runnable loadInstruktur = () -> {
             cmbInstruktur.removeAllItems();
 
@@ -86,7 +77,6 @@ public class JadwalKelas extends JPanel {
         };
         loadInstruktur.run();
 
-        // REFRESH saat panel dibuka lagi
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentShown(ComponentEvent e) {
@@ -94,7 +84,6 @@ public class JadwalKelas extends JPanel {
             }
         });
 
-        // BUTTONS
         JButton btnSimpan = new JButton("Tambah Kelas");
         btnSimpan.setBounds(20, 190, 150, 30);
         btnSimpan.setBackground(new Color(76, 175, 80));
@@ -119,7 +108,6 @@ public class JadwalKelas extends JPanel {
         btnHapus.setForeground(Color.WHITE);
         add(btnHapus);
 
-        // TABLE
         DefaultTableModel tableModel = new DefaultTableModel();
         JTable tableKelas = new JTable(tableModel);
         JScrollPane scrollTable = new JScrollPane(tableKelas);
@@ -132,7 +120,6 @@ public class JadwalKelas extends JPanel {
         tableModel.addColumn("Jam Kelas");
         tableModel.addColumn("Nama Instruktur");
 
-        // Load data kelas
         Runnable loadKelas = () -> {
             try {
                 tableModel.setRowCount(0);
@@ -164,7 +151,6 @@ public class JadwalKelas extends JPanel {
         };
         loadKelas.run();
 
-        // TABLE CLICK → isi form
         tableKelas.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -187,7 +173,6 @@ public class JadwalKelas extends JPanel {
             }
         });
 
-        // SIMPAN
         btnSimpan.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -229,7 +214,6 @@ public class JadwalKelas extends JPanel {
             }
         });
 
-        // UPDATE
         btnUpdate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -276,7 +260,6 @@ public class JadwalKelas extends JPanel {
             }
         });
 
-        // RESET
         btnReset.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -287,7 +270,6 @@ public class JadwalKelas extends JPanel {
             }
         });
 
-        // HAPUS
         btnHapus.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

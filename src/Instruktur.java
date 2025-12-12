@@ -9,89 +9,74 @@ public class Instruktur extends JPanel {
         setLayout(null);
         this.setBackground(new Color(250, 250, 250));
 
-        // Label Nama
         JLabel lblNama = new JLabel("Nama Instruktur:");
         lblNama.setBounds(20, 20, 120, 25);
         add(lblNama);
 
-        // Input Nama
         JTextField txtNama = new JTextField();
         txtNama.setBounds(150, 20, 230, 25);
         add(txtNama);
 
-        // Label Usia
         JLabel lblUsia = new JLabel("Usia:");
         lblUsia.setBounds(20, 60, 120, 25);
         add(lblUsia);
 
-        // Input Usia
         JTextField txtUsia = new JTextField();
         txtUsia.setBounds(150, 60, 230, 25);
         add(txtUsia);
 
-        // Label Keahlian
         JLabel lblKeahlian = new JLabel("Keahlian:");
         lblKeahlian.setBounds(20, 100, 120, 25);
         add(lblKeahlian);
 
-        // Input Keahlian
         JTextField txtKeahlian = new JTextField();
         txtKeahlian.setBounds(150, 100, 230, 25);
         add(txtKeahlian);
 
-        // Label No Telp
         JLabel lblTelp = new JLabel("No. Telepon:");
         lblTelp.setBounds(20, 140, 120, 25);
         add(lblTelp);
 
-        // Input No Telp
         JTextField txtTelp = new JTextField();
         txtTelp.setBounds(150, 140, 230, 25);
         add(txtTelp);
 
-        // Tombol Simpan
         JButton btnSimpan = new JButton("Daftarkan Instruktur");
         btnSimpan.setBounds(20, 190, 150, 30);
         btnSimpan.setBackground(new Color(76, 175, 80));
         btnSimpan.setForeground(Color.WHITE); 
         add(btnSimpan);
 
-        // Tombol Reset
         JButton btnReset = new JButton("Reset");
         btnReset.setBounds(180, 190, 100, 30);
         btnReset.setBackground(new Color(255, 193, 7));
         btnReset.setForeground(Color.WHITE);  
         add(btnReset);
 
-        // Tombol Update
         JButton btnUpdate = new JButton("Update");
         btnUpdate.setBounds(290, 190, 100, 30);
         btnUpdate.setBackground(new Color(102, 178, 255));
         btnUpdate.setForeground(Color.WHITE); 
         add(btnUpdate);
 
-        // Tombol Hapus
         JButton btnHapus = new JButton("Hapus");
         btnHapus.setBounds(400, 190, 100, 30);
         btnHapus.setBackground(new Color(244, 67, 54));
         btnHapus.setForeground(Color.WHITE);
         add(btnHapus);
 
-        // Table Model dan JTable
         DefaultTableModel tableModel = new DefaultTableModel();
         JTable tableInstruktur = new JTable(tableModel);
         JScrollPane scrollTable = new JScrollPane(tableInstruktur);
         scrollTable.setBounds(20, 240, 600, 170);
         add(scrollTable);
 
-        // Set kolom tabel
         tableModel.addColumn("ID");
         tableModel.addColumn("Nama");
         tableModel.addColumn("Usia");
         tableModel.addColumn("Keahlian");
         tableModel.addColumn("No. Telepon");
 
-        // Fungsi untuk load data dari database ke tabel
         Runnable loadInstruktur = () -> {
             try {
                 tableModel.setRowCount(0);
@@ -118,10 +103,8 @@ public class Instruktur extends JPanel {
             }
         };
 
-        // Initial load
         loadInstruktur.run();
 
-        // TABLE CLICK (AUTO LOAD KE INPUT FIELD)
         tableInstruktur.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -135,7 +118,6 @@ public class Instruktur extends JPanel {
             }
         });
 
-        // EVENT SIMPAN KE MYSQL
         btnSimpan.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -144,13 +126,11 @@ public class Instruktur extends JPanel {
                 String keahlian = txtKeahlian.getText().trim();
                 String telepon = txtTelp.getText().trim();
 
-                // Validasi input kosong
                 if (nama.isEmpty() || usiaStr.isEmpty() || keahlian.isEmpty() || telepon.isEmpty()) {
                     JOptionPane.showMessageDialog(parentFrame, "Semua field wajib diisi!", "Error",
                             JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                // Validasi usia harus angka positif
                 int usia;
                 try {
                     usia = Integer.parseInt(usiaStr);
@@ -189,7 +169,6 @@ public class Instruktur extends JPanel {
             }
         });
 
-        // EVENT RESET FORM
         btnReset.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -200,7 +179,6 @@ public class Instruktur extends JPanel {
             }
         });
 
-        // ===== EVENT UPDATE (FITUR BARU) =====
         btnUpdate.addActionListener(e -> {
             int row = tableInstruktur.getSelectedRow();
             if (row == -1) {
@@ -233,7 +211,6 @@ public class Instruktur extends JPanel {
             }
         });
 
-        // EVENT HAPUS DATA
         btnHapus.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

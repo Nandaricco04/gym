@@ -9,82 +9,68 @@ public class MemberGym extends JPanel {
         setLayout(null);
         this.setBackground(new Color(250, 250, 250));
 
-        // Label Nama
         JLabel lblNama = new JLabel("Nama Member:");
         lblNama.setBounds(20, 20, 120, 25);
         add(lblNama);
 
-        // Input Nama
         JTextField txtNama = new JTextField();
         txtNama.setBounds(150, 20, 230, 25);
         add(txtNama);
 
-        // Label Usia
         JLabel lblUsia = new JLabel("Usia:");
         lblUsia.setBounds(20, 60, 120, 25);
         add(lblUsia);
 
-        // Input Usia
         JTextField txtUsia = new JTextField();
         txtUsia.setBounds(150, 60, 230, 25);
         add(txtUsia);
 
-        // Label Alamat
         JLabel lblAlamat = new JLabel("Alamat:");
         lblAlamat.setBounds(20, 100, 120, 25);
         add(lblAlamat);
 
-        // Input Alamat
         JTextField txtAlamat = new JTextField();
         txtAlamat.setBounds(150, 100, 230, 25);
         add(txtAlamat);
 
-        // Label No Telp
         JLabel lblTelp = new JLabel("No. Telepon:");
         lblTelp.setBounds(20, 140, 120, 25);
         add(lblTelp);
 
-        // Input No Telp
         JTextField txtTelp = new JTextField();
         txtTelp.setBounds(150, 140, 230, 25);
         add(txtTelp);
 
-        // Tombol Simpan
         JButton btnSimpan = new JButton("Daftar Member");
         btnSimpan.setBounds(20, 190, 150, 30);
         btnSimpan.setBackground(new Color(76, 175, 80));
         btnSimpan.setForeground(Color.WHITE); 
         add(btnSimpan);
 
-        // Tombol Reset
         JButton btnReset = new JButton("Reset");
         btnReset.setBounds(180, 190, 100, 30);
         btnReset.setBackground(new Color(255, 193, 7));
         btnReset.setForeground(Color.WHITE); 
         add(btnReset);
 
-        // Tombol Hapus
         JButton btnHapus = new JButton("Hapus");
         btnHapus.setBounds(290, 190, 100, 30);
         btnHapus.setBackground(new Color(244, 67, 54));
         btnHapus.setForeground(Color.WHITE);
         add(btnHapus);
 
-        // Table Model dan JTable
         DefaultTableModel tableModel = new DefaultTableModel();
         JTable tableMember = new JTable(tableModel);
         JScrollPane scrollTable = new JScrollPane(tableMember);
         scrollTable.setBounds(20, 240, 600, 170);
         add(scrollTable);
 
-        // Set kolom tabel
         tableModel.addColumn("ID");
         tableModel.addColumn("Nama");
         tableModel.addColumn("Usia");
         tableModel.addColumn("Alamat");
         tableModel.addColumn("No. Telepon");
 
-        // Fungsi untuk load data dari database ke tabel
         Runnable loadMember = () -> {
             try {
                 tableModel.setRowCount(0);
@@ -111,10 +97,8 @@ public class MemberGym extends JPanel {
             }
         };
 
-        // Initial load
         loadMember.run();
 
-        // EVENT SIMPAN KE MYSQL
         btnSimpan.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -123,13 +107,11 @@ public class MemberGym extends JPanel {
                 String alamat = txtAlamat.getText().trim();
                 String telepon = txtTelp.getText().trim();
 
-                // Validasi input kosong
                 if (nama.isEmpty() || usiaStr.isEmpty() || alamat.isEmpty() || telepon.isEmpty()) {
                     JOptionPane.showMessageDialog(parentFrame, "Semua field wajib diisi!", "Error",
                             JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                // Validasi usia harus angka positif
                 int usia;
                 try {
                     usia = Integer.parseInt(usiaStr);
@@ -169,7 +151,6 @@ public class MemberGym extends JPanel {
             }
         });
 
-        // EVENT RESET FORM
         btnReset.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -180,7 +161,6 @@ public class MemberGym extends JPanel {
             }
         });
 
-        // EVENT HAPUS DATA
         btnHapus.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

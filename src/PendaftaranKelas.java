@@ -10,7 +10,6 @@ public class PendaftaranKelas extends JPanel {
         setLayout(null);
         this.setBackground(new Color(250, 250, 250));
 
-        // LABEL & INPUT
         JLabel lblMember = new JLabel("Member Gym:");
         lblMember.setBounds(20, 20, 120, 25);
         add(lblMember);
@@ -46,7 +45,6 @@ public class PendaftaranKelas extends JPanel {
         txtCatatan.setBounds(150, 140, 230, 25);
         add(txtCatatan);
 
-        // BUTTONS ======
         JButton btnSimpan = new JButton("Daftarkan Kelas");
         btnSimpan.setBounds(20, 190, 150, 30);
         btnSimpan.setBackground(new Color(76, 175, 80));
@@ -71,7 +69,6 @@ public class PendaftaranKelas extends JPanel {
         btnHapus.setForeground(Color.WHITE);
         add(btnHapus);
 
-        // TABLE
         DefaultTableModel tableModel = new DefaultTableModel();
         JTable tablePendaftaran = new JTable(tableModel);
         JScrollPane scrollTable = new JScrollPane(tablePendaftaran);
@@ -85,7 +82,6 @@ public class PendaftaranKelas extends JPanel {
         tableModel.addColumn("Tanggal Daftar");
         tableModel.addColumn("Catatan");
 
-        // LOAD COMBO MEMBER
         Runnable loadMember = () -> {
             cmbMember.removeAllItems();
             cmbMember.addItem("– Pilih Member –");
@@ -105,7 +101,6 @@ public class PendaftaranKelas extends JPanel {
             cmbMember.setSelectedIndex(0);  
         };
 
-        // LOAD COMBO KELAS
         Runnable loadKelas = () -> {
             cmbKelas.removeAllItems();
             cmbKelas.addItem("– Pilih Kelas –");
@@ -126,7 +121,6 @@ public class PendaftaranKelas extends JPanel {
             cmbKelas.setSelectedIndex(0);
         };
 
-        // LOAD TABLE PENDAFTARAN
         Runnable loadPendaftaranKelas = () -> {
             tableModel.setRowCount(0);                      
             try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_gym", "root", "")) {
@@ -151,12 +145,10 @@ public class PendaftaranKelas extends JPanel {
             }
         };
 
-        // LOAD AWAL
         loadMember.run();
         loadKelas.run();
         loadPendaftaranKelas.run();
 
-        // REFRESH saat panel dibuka/dipanggil lagi
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentShown(ComponentEvent e) {
@@ -165,7 +157,6 @@ public class PendaftaranKelas extends JPanel {
             }
         });
 
-        // SINKRONISASI INPUT SAAT KLIK TABEL
         tablePendaftaran.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -193,7 +184,6 @@ public class PendaftaranKelas extends JPanel {
             }
         });
 
-        // SIMPAN
         btnSimpan.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -234,7 +224,6 @@ public class PendaftaranKelas extends JPanel {
             }
         });
 
-        // RESET
         btnReset.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -245,7 +234,6 @@ public class PendaftaranKelas extends JPanel {
             }
         });
 
-        // UPDATE
         btnUpdate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -285,7 +273,6 @@ public class PendaftaranKelas extends JPanel {
             }
         });
 
-        // HAPUS
         btnHapus.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
