@@ -1,4 +1,4 @@
-import javax.swing.*;
+import javax.swing.*; 
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.*;
 import java.sql.*;
@@ -102,7 +102,7 @@ public class PendaftaranKelas extends JPanel {
                 JOptionPane.showMessageDialog(parentFrame, "Gagal load member!\n" + ex.getMessage(),
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
-            cmbMember.setSelectedIndex(0);
+            cmbMember.setSelectedIndex(0);  
         };
 
         // LOAD COMBO KELAS
@@ -128,7 +128,7 @@ public class PendaftaranKelas extends JPanel {
 
         // LOAD TABLE PENDAFTARAN
         Runnable loadPendaftaranKelas = () -> {
-            tableModel.setRowCount(0);
+            tableModel.setRowCount(0);                      
             try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_gym", "root", "")) {
                 String sql = "SELECT pk.id_pendaftaran, m.nama AS member_nama, k.nama_kelas, i.nama AS instruktur, pk.tanggal_daftar, pk.catatan FROM pendaftaran_kelas pk JOIN member_gym m ON pk.id_member=m.id_member JOIN jadwal_kelas k ON pk.id_kelas=k.id_kelas JOIN instruktur_gym i ON k.id_instruktur=i.id_instruktur";
                 Statement stmt = conn.createStatement();
@@ -142,7 +142,7 @@ public class PendaftaranKelas extends JPanel {
                             rs.getString("tanggal_daftar"),
                             rs.getString("catatan")
                     });
-                }
+                }   
                 rs.close();
                 stmt.close();
             } catch (Exception ex) {
@@ -200,9 +200,9 @@ public class PendaftaranKelas extends JPanel {
                 if (cmbMember.getSelectedIndex() == 0 || cmbKelas.getSelectedIndex() == 0) {
                     JOptionPane.showMessageDialog(parentFrame, "Pilih member dan kelas terlebih dahulu!", "Error",
                             JOptionPane.ERROR_MESSAGE);
-                    return;
+                    return; 
                 }
-                String member = cmbMember.getSelectedItem().toString();
+                String member = cmbMember.getSelectedItem().toString(); 
                 String kelas = cmbKelas.getSelectedItem().toString();
                 String tanggal = txtTanggal.getText().trim();
                 String catatan = txtCatatan.getText().trim();
@@ -215,7 +215,7 @@ public class PendaftaranKelas extends JPanel {
 
                     PreparedStatement stmt = conn.prepareStatement(sql);
                     stmt.setInt(1, id_member);
-                    stmt.setInt(2, id_kelas);
+                    stmt.setInt(2, id_kelas);           
                     stmt.setString(3, tanggal);
                     stmt.setString(4, catatan);
                     stmt.executeUpdate();
@@ -275,12 +275,12 @@ public class PendaftaranKelas extends JPanel {
                         stmt.executeUpdate();
                     }
 
-                    SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(parentFrame, "Update berhasil!"));
+                    JOptionPane.showMessageDialog(parentFrame, "Update berhasil!");
                     loadPendaftaranKelas.run();
 
                 } catch (Exception ex) {
-                    SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(parentFrame,
-                            "Gagal update!\n" + ex.getMessage()));
+                    JOptionPane.showMessageDialog(parentFrame,
+                            "Gagal update!\n" + ex.getMessage());
                 }
             }
         });
@@ -313,12 +313,12 @@ public class PendaftaranKelas extends JPanel {
                         stmt.executeUpdate();
                     }
 
-                    SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(parentFrame, "Berhasil dihapus!"));
+                    JOptionPane.showMessageDialog(parentFrame, "Berhasil dihapus!");
                     loadPendaftaranKelas.run();
 
                 } catch (Exception ex) {
-                    SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(parentFrame,
-                            "Gagal hapus!\n" + ex.getMessage()));
+                    JOptionPane.showMessageDialog(parentFrame,
+                            "Gagal hapus!\n" + ex.getMessage());
                 }
             }
         });
